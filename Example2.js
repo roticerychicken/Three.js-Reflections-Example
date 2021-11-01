@@ -49,24 +49,29 @@ const sphereMaterial = {
 };
 
 
-const cubeRenderTarget = new THREE.WebGLCubeRenderTarget( 1000, { format: THREE.RGBFormat, generateMipmaps: true, minFilter: THREE.LinearMipmapLinearFilter } );
-const sphereCamera = new THREE.CubeCamera(5,1000,cubeRenderTarget);
-sphereCamera.position.set(5,0,3);
-scene.add(sphereCamera)
-let sphereMat = new THREE.MeshBasicMaterial({
-	envMap: sphereCamera.renderTarget 
-});
-let sphereGeo = new THREE.SphereGeometry( 5, 100, 100 );
-let sphere1 = new THREE.Mesh(sphereGeo, sphereMat);
-sphere1.position.set(5,0,3);
-scene.add(sphere1);
+
+
+
+let geometry1, groundMirror;
+geometry1 = new THREE.CircleGeometry( 20, 100 );
+groundMirror = new Reflector( geometry1, {
+	clipBias: 0.003,
+	textureWidth: window.innerWidth * window.devicePixelRatio,
+	textureHeight: window.innerHeight * window.devicePixelRatio,
+	color: 0x777777,
+	side: THREE.DoubleSide
+} );
+groundMirror.position.set(0,-3,-5)
+groundMirror.rotateX( - Math.PI / 2 );
+scene.add( groundMirror );
+
 
 
 
 const geometry = new THREE.SphereGeometry( 3, 32, 16 );
 const ballmaterial = new THREE.MeshPhysicalMaterial(sphereMaterial);
 const sphere = new THREE.Mesh( geometry, ballmaterial );
-sphere.position.set(-5,0,3);
+sphere.position.set(0,0,-5);
 scene.add( sphere );
 
 
@@ -81,6 +86,7 @@ scene.add( sphere );
         scene.background = rt.texture;
       });
  }
+
 
 
 function animate() {
